@@ -6,12 +6,21 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MVCClass_SkillTreeORM.Models;
+using System.ComponentModel;                  //MetadataType使用
+using System.ComponentModel.DataAnnotations; //MetadataType使用
 
 namespace MVCClass_SkillTreeORM.Controllers
 {
     public class SystemUserController : Controller
     {      
         private MVCClassORMDatabaseEntities db = new MVCClassORMDatabaseEntities();
+
+        [MetadataType(typeof(DataValidationDefinition))]
+        public  class DataValidationDefinition
+        //未於EF, Entity Framework設定比對條件
+        {
+
+        }
 
         //
         // GET: /SystemUser/
@@ -54,8 +63,10 @@ namespace MVCClass_SkillTreeORM.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(SystemUser systemuser)
+        public ActionResult Create([Bind(Exclude = "UpdateUser")]SystemUser systemuser)
         {
+        //明確指明排除對象
+
             if (ModelState.IsValid)
             {
                 systemuser.ID = Guid.NewGuid();
